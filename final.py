@@ -11,6 +11,7 @@ def crop_image(image, crop_mode):
     width, height = im.size
 
     if crop_mode == "portrait":
+        target_size = (1080,1350)
         # Crop to a portrait aspect ratio (e.g., 4:5)
         new_width = min(width, height * 4 // 5)
         left = (width - new_width) // 2
@@ -18,6 +19,7 @@ def crop_image(image, crop_mode):
         right = left + new_width
         bottom = height
     elif crop_mode == "square":
+        target_size = (1080,1080)
         # Crop to a square aspect ratio
         new_size = min(width, height)
         left = (width - new_size) // 2
@@ -26,6 +28,7 @@ def crop_image(image, crop_mode):
         bottom = top + new_size
     elif crop_mode == "story":
         # Crop to a story aspect ratio (9:16) for a typical mobile screen
+        target_size = (1080,1920)
         width, height = im.size
         target_height = height
         target_width = int(target_height * 9 / 16)
@@ -38,7 +41,8 @@ def crop_image(image, crop_mode):
 
     # Perform the crop
     cropped_im = im.crop((left, top, right, bottom))
-
+    
+    # cropped_im.thumbnail(target_size, Image.Resampling.LANCZOS)
     return cropped_im
 
 
@@ -151,12 +155,12 @@ def add_logo(input_image, logo_image_path, max_width, max_height, position=(10,1
     input_image.paste(resized_logo, paste_position,resized_logo)
 
 
-def sample_template(text,input_img_path,output_img_path):
+def sample_template(text,input_img_path,output_img_path,crop_mode):
 
     original_image = Image.open(input_img_path)
     
     ## crop image for given crop mode
-    crop_mode = "square"
+    # crop_mode = "square"
     cropped_image = crop_image(original_image, crop_mode)
 
     # adding gradient
@@ -197,18 +201,18 @@ def sample_template(text,input_img_path,output_img_path):
     logo_width = (gradient_image.size[0] * 10) // 100
     logo_height = ((gradient_image.size[1] * 98) // 100) - y_max
     logo_size= min(logo_width,logo_height)
-    logo_image_path = r"images\iconsStark.png"
+    logo_image_path = r"images\image.png"
     add_logo(gradient_image, logo_image_path, logo_size, logo_size, position=(logo_x,logo_y))
 
     gradient_image.save(output_img_path)
 
 
-def second_template(text,input_img_path,output_img_path):
+def second_template(text,input_img_path,output_img_path,crop_mode):
 
     original_image = Image.open(input_img_path)
     
     ## crop image for given crop mode
-    crop_mode = "square"
+    # crop_mode = "square"
     cropped_image = crop_image(original_image, crop_mode)
 
     # adding gradient
@@ -227,7 +231,8 @@ def second_template(text,input_img_path,output_img_path):
     max_height = (gradient_image.size[1] * 80) // 100   
 
     font_path = r'C:\Windows\Fonts\MAGNETOB'
-    font_size = (gradient_image.size[0] * 4) // 100
+    # font_size = (gradient_image.size[0] * 4) // 100
+    font_size = 70
     font = ImageFont.truetype(font_path, font_size)
 
     wrapped_text= text_wrap(text, max_width, font)
@@ -241,33 +246,37 @@ def second_template(text,input_img_path,output_img_path):
     x = (gradient_image.size[0] * 50) // 100
     # draw.text((x,y_max), text=final_wrapped_text, font=reduced_font, anchor="md", align='center')
     draw.multiline_text((x,y_max), text=final_wrapped_text, font=reduced_font, anchor="md", spacing=30, align='center', stroke_width=0, embedded_color=False)
+    
+    
     ### logo 
 
     logo_width = (gradient_image.size[1] * 10) // 100
     logo_height = logo_width
-    logo_image_path = r"images\iconsStark.png"
+    logo_image_path = r"images\image.png"
 
     logo_x = ((gradient_image.size[0] * 50) //100) - (logo_width // 2)
     logo_y = (gradient_image.size[1] * 90) //100
     
     add_logo(gradient_image, logo_image_path, logo_width, logo_height, position=(logo_x,logo_y))
 
-    # logo_width = (gradient_image.size[1] * 5) // 100
-    # logo_height = logo_width
-    # arrow_x = (gradient_image.size[0] * 93) //100
-    # arrow_y = (gradient_image.size[1] * 45) //100
-    # arrow_image_path = r'images\whiteArrow.png'
-    # add_logo(gradient_image, arrow_image_path, logo_width, logo_height, position=(arrow_x,arrow_y))
+    logo_width = (gradient_image.size[1] * 3) // 100
+    logo_height = logo_width
+    arrow_x = (gradient_image.size[0] * 93) //100
+    arrow_y = (gradient_image.size[1] * 45) //100
+    arrow_image_path = r'images\whiteArrow.png'
+    add_logo(gradient_image, arrow_image_path, logo_width, logo_height, position=(arrow_x,arrow_y))
     
     gradient_image.save(output_img_path)
 
 
 if __name__ == "__main__":
-    input_img_path =r"images\flowera.jpg"
-    output_img_path = r"output_images\flowera_edit.png"
+    input_img_path =r"images\wall-e.jpg"
+    output_img_path = r"output_images\wall-e_edit2.png"
     
     # input_img_path =r"images\minions.jpg"
     # output_img_path = r"output_images\minions_edit.png"
 
-    text = "Sample Test flowera flowera flowera flowera"
-    second_template(text, input_img_path,output_img_path)
+    text = "Blossoming with vibrant colors and delicate petals."
+    crop_mode = "square"
+
+    sample_template(text, input_img_path,output_img_path,crop_mode)
