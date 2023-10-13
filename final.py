@@ -269,6 +269,31 @@ def second_template(text,input_img_path,output_img_path,crop_mode):
     gradient_image.save(output_img_path)
 
 
+def third_template(text,input_img_path,output_img_path,crop_mode, logo_position):
+
+    original_image = Image.open(input_img_path)
+    
+    ## crop image for given crop mode
+    cropped_image = crop_image(original_image, crop_mode)
+
+    gradient_image = cropped_image
+
+    ### logo 
+
+    logo_width = (gradient_image.size[1] * 10) // 100
+    logo_height = logo_width
+    logo_image_path = r"images\image.png"
+
+    logo_x = ((gradient_image.size[0] * 50) //100) - (logo_width // 2)
+    logo_y = (gradient_image.size[1] * 90) //100
+    
+    add_logo(gradient_image, logo_image_path, logo_width, logo_height, position=(logo_x,logo_y))
+
+
+    gradient_image.save(output_img_path)
+
+
+
 if __name__ == "__main__":
     input_img_path =r"images\wall-e.jpg"
     output_img_path = r"output_images\wall-e_edit2.png"
