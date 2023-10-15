@@ -42,7 +42,7 @@ def crop_image(image, crop_mode):
     # Perform the crop
     cropped_im = im.crop((left, top, right, bottom))
     
-    # cropped_im.thumbnail(target_size, Image.Resampling.LANCZOS)
+    cropped_im.thumbnail(target_size, Image.Resampling.LANCZOS)
     return cropped_im
 
 
@@ -269,7 +269,7 @@ def second_template(text,input_img_path,output_img_path,crop_mode):
     gradient_image.save(output_img_path)
 
 
-def third_template(text,input_img_path,output_img_path,crop_mode, logo_position):
+def logo_template(text,input_img_path,output_img_path,crop_mode):
 
     original_image = Image.open(input_img_path)
     
@@ -280,13 +280,18 @@ def third_template(text,input_img_path,output_img_path,crop_mode, logo_position)
 
     ### logo 
 
-    logo_width = (gradient_image.size[1] * 10) // 100
+    logo_width = (gradient_image.size[1] * 15) // 100
     logo_height = logo_width
     logo_image_path = r"images\image.png"
 
-    logo_x = ((gradient_image.size[0] * 50) //100) - (logo_width // 2)
-    logo_y = (gradient_image.size[1] * 90) //100
+    px = ((gradient_image.size[0] * 2) //100)
+    py = ((gradient_image.size[1] * 2) //100)
+    # logo_x = ((gradient_image.size[0] * 50) //100) - (logo_width // 2)
+    # logo_y = (gradient_image.size[1] * 90) //100
     
+    logo_x = gradient_image.size[0] - px - logo_width
+    logo_y = py
+    print(f'x= {logo_x} & y= {logo_y}')
     add_logo(gradient_image, logo_image_path, logo_width, logo_height, position=(logo_x,logo_y))
 
 
@@ -296,12 +301,12 @@ def third_template(text,input_img_path,output_img_path,crop_mode, logo_position)
 
 if __name__ == "__main__":
     input_img_path =r"images\wall-e.jpg"
-    output_img_path = r"output_images\wall-e_edit2.png"
+    output_img_path = r"output_images\wall-e_logo.png"
     
     # input_img_path =r"images\minions.jpg"
     # output_img_path = r"output_images\minions_edit.png"
 
     text = "Blossoming with vibrant colors and delicate petals."
-    crop_mode = "square"
-
-    sample_template(text, input_img_path,output_img_path,crop_mode)
+    crop_mode = "story"
+    
+    logo_template(text, input_img_path,output_img_path,crop_mode)

@@ -140,8 +140,34 @@ def sample_template(text, input_img_path, output_img_path, crop_mode):
 
     draw = ImageDraw.Draw(gradient_image)
     x = (gradient_image.size[0] * 50) // 100
-    draw.multiline_text((x, y_max), text=final_wrapped_text, font=reduced_font, anchor="md", spacing=30, align='center', stroke_width=0, embedded_color=False)
+    # draw.multiline_text((x, y_max), text=final_wrapped_text, font=reduced_font, anchor="md", spacing=30, align='center', stroke_width=0, embedded_color=False)
     
+    # highlight_offset = 3
+    # highlight_color = "rgb(255, 255, 0)"
+    # # x, y = (x, y_max)
+    # x += highlight_offset
+    # draw.text((x, y_max), final_wrapped_text, font=reduced_font, anchor="md", spacing=30, fill=highlight_color,)
+    # x -= highlight_offset
+    # draw.text((x, y_max), final_wrapped_text, font=reduced_font, anchor="md", spacing=30)
+
+
+
+
+    # Create a bounding box for the highlighted background
+    highlight_color = "rgb(255, 255, 0)"
+    text_bbox = draw.textbbox((x, y_max), final_wrapped_text, font=reduced_font)
+    padding = 10  # Adjust the padding as needed
+    highlight_bbox = (text_bbox[0] - padding, text_bbox[1] - padding, text_bbox[2] + padding, text_bbox[3] + padding)
+    
+    # Draw the highlighted background
+    draw.rectangle(highlight_bbox, fill=highlight_color)
+    
+    # Draw the main text on top of the highlight
+    draw.text((x, y_max), text=final_wrapped_text, font=reduced_font, anchor="md")
+
+
+
+
     logo_width = (gradient_image.size[1] * 10) // 100
     logo_height = logo_width
     logo_image_path = r"images\image.png"
@@ -160,7 +186,7 @@ def sample_template(text, input_img_path, output_img_path, crop_mode):
 
 if __name__ == "__main__":
     input_img_path = r"images\wall-e.jpg"
-    output_img_path = r"output_images\wall-e_edit3.png"
+    output_img_path = r"output_images\wall-e_edit_hl1.png"
     text = "Blossoming with vibrant colors and delicate petals.Blossoming with vibrant colors and delicate petals"
     crop_mode = "square"
     sample_template(text, input_img_path, output_img_path, crop_mode)
