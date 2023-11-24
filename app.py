@@ -9,7 +9,7 @@ app = Flask(__name__)
 
 @app.route("/generate", methods=["POST"])
 def generate_image():
-    try:
+    # try:
         
         artical_url = request.form.get("artical_url",None)
 
@@ -111,6 +111,37 @@ def generate_image():
                 crop_mode = "story"
                 story_2(text, category, input_img_path, output_img_path, crop_mode)
 
+##########################################---- ReformA ----##########################################
+            elif template_type == "feed_1":
+                category = request.form.get("sub_text","LAJME").upper()
+                category="LAJME" if len(category)==0 else category
+                crop_mode = "portrait"
+                feed_1(text, category, input_img_path, output_img_path, crop_mode)
+
+            elif template_type == "feed_2":
+                category = request.form.get("sub_text","LAJME").upper()
+                category="LAJME" if len(category)==0 else category
+                crop_mode = "portrait"
+                feed_2(text, category, input_img_path, output_img_path, crop_mode)
+
+            elif template_type == "citim_reforma":
+                author = request.form.get("sub_text")
+                sub_text = author.upper()
+                citim_reforma(text, sub_text, input_img_path, output_img_path, crop_mode)
+
+            elif template_type == "feed_location_reforma":
+                location = request.form.get("location", "")
+                arrow = request.form.get("arrow")
+                feed_location_reforma(text, input_img_path, output_img_path, crop_mode, location, arrow)
+
+            elif template_type == "logo_only_reforma":
+                logo_position = int(request.form.get("logo_position"))
+                logo_only_reforma(input_img_path, output_img_path, crop_mode, logo_position)
+
+            elif template_type == "feed_swipe_reforma":
+                arrow = request.form.get("arrow")
+                feed_swipe_reforma(text, input_img_path, output_img_path, crop_mode, arrow)
+
             else:
                 response = {"Invalid Template": template_type}
                 return jsonify(response)
@@ -120,9 +151,9 @@ def generate_image():
         response = {"output_file_path": output_img_path}
         return jsonify(response), 200
 
-    except Exception as e:
-        response = {"error": str(e)}
-        return jsonify(response), 500
+    # except Exception as e:
+    #     response = {"error": str(e)}
+    #     return jsonify(response), 500
 
 if __name__ == "__main__":
     app.run(debug=True)
